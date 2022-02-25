@@ -11,11 +11,10 @@ output:
 ---
 
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, error=TRUE, message=FALSE, warning=FALSE)
-```
 
-```{r libraries}
+
+
+```r
 library(tidyverse)     # for graphing and data cleaning
 library(gardenR)       # for Lisa's garden data
 library(lubridate)     # for date manipulation
@@ -24,7 +23,8 @@ library(geofacet)      # for special faceting with US map layout
 theme_set(theme_minimal())       # My favorite ggplot() theme :)
 ```
 
-```{r data}
+
+```r
 # Lisa's garden data
 data("garden_harvest")
 
@@ -80,7 +80,8 @@ These exercises will reiterate what you learned in the "Expanding the data wrang
 
   1. Summarize the `garden_harvest` data to find the total harvest weight in pounds for each vegetable and day of week (HINT: use the `wday()` function from `lubridate`). Display the results so that the vegetables are rows but the days of the week are columns.
 
-```{r}
+
+```r
 garden_harvest %>% 
   mutate(day = wday(date, label = TRUE)) %>% 
   group_by(vegetable, day) %>% 
@@ -89,14 +90,25 @@ garden_harvest %>%
               values_from = total_wt)
 ```
 
+<div data-pagedtable="false">
+  <script data-pagedtable-source type="application/json">
+{"columns":[{"label":["vegetable"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Sat"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["Mon"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Tue"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["Thu"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["Fri"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["Sun"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["Wed"],"name":[8],"type":["dbl"],"align":["right"]}],"data":[{"1":"apple","2":"156","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA"},{"1":"asparagus","2":"20","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"NA"},{"1":"basil","2":"186","3":"30","4":"50","5":"12","6":"212","7":"NA","8":"NA"},{"1":"beans","2":"2136","3":"2952","4":"1990","5":"1539","6":"692","7":"868","8":"1852"},{"1":"beets","2":"172","3":"305","4":"72","5":"5394","6":"11","7":"146","8":"83"},{"1":"broccoli","2":"NA","3":"372","4":"NA","5":"NA","6":"75","7":"571","8":"321"},{"1":"carrots","2":"1057","3":"395","4":"160","5":"1213","6":"970","7":"1332","8":"2523"},{"1":"chives","2":"NA","3":"NA","4":"NA","5":"NA","6":"NA","7":"NA","8":"8"},{"1":"cilantro","2":"17","3":"NA","4":"2","5":"NA","6":"33","7":"NA","8":"NA"},{"1":"corn","2":"597","3":"344","4":"330","5":"NA","6":"1564","7":"661","8":"2405"},{"1":"cucumbers","2":"4373","3":"2166","4":"4557","5":"1500","6":"3370","7":"1408","8":"2407"},{"1":"edamame","2":"2127","3":"NA","4":"636","5":"NA","6":"NA","7":"NA","8":"NA"},{"1":"hot peppers","2":"NA","3":"571","4":"64","5":"NA","6":"NA","7":"NA","8":"31"},{"1":"jalapeño","2":"684","3":"2519","4":"249","5":"102","6":"587","7":"119","8":"218"},{"1":"kale","2":"676","3":"938","4":"128","5":"127","6":"173","7":"375","8":"280"},{"1":"kohlrabi","2":"NA","3":"NA","4":"NA","5":"191","6":"NA","7":"NA","8":"NA"},{"1":"lettuce","2":"597","3":"1115","4":"416","5":"1112","6":"817","7":"665","8":"538"},{"1":"onions","2":"868","3":"231","4":"321","5":"273","6":"33","7":"118","8":"NA"},{"1":"peas","2":"1294","3":"2102","4":"938","5":"1541","6":"425","7":"933","8":"490"},{"1":"peppers","2":"627","3":"1146","4":"655","5":"322","6":"152","7":"228","8":"1108"},{"1":"potatoes","2":"1271","3":"440","4":"NA","5":"5376","6":"1697","7":"NA","8":"2073"},{"1":"pumpkins","2":"42043","3":"13662","4":"14450","5":"NA","6":"NA","7":"NA","8":"NA"},{"1":"radish","2":"105","3":"89","4":"43","5":"67","6":"88","7":"37","8":"NA"},{"1":"raspberries","2":"242","3":"59","4":"152","5":"131","6":"259","7":"NA","8":"NA"},{"1":"rutabaga","2":"3129","3":"NA","4":"NA","5":"NA","6":"1623","7":"8738","8":"NA"},{"1":"spinach","2":"118","3":"67","4":"225","5":"106","6":"89","7":"221","8":"97"},{"1":"squash","2":"25502","3":"11038","4":"8377","5":"NA","6":"NA","7":"NA","8":"NA"},{"1":"strawberries","2":"77","3":"217","4":"NA","5":"40","6":"221","7":"37","8":"NA"},{"1":"Swiss chard","2":"333","3":"487","4":"32","5":"1012","6":"280","7":"566","8":"412"},{"1":"tomatoes","2":"15933","3":"5213","4":"22113","5":"15657","6":"38590","7":"34296","8":"26429"},{"1":"zucchini","2":"1549","3":"5532","4":"7470","5":"15708","6":"8492","7":"5550","8":"926"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+
   2. Summarize the `garden_harvest` data to find the total harvest in pound for each vegetable variety and then try adding the plot from the `garden_planting` table. This will not turn out perfectly. What is the problem? How might you fix it?
 
-```{r}
+
+```r
 garden_harvest %>% 
   group_by(vegetable, variety) %>% 
   summarize(tot_harvest_lb = weight*0.0022) %>% 
   left_join(plant_date_loc,
             by = c("vegetable", "variety"))
+```
+
+```
+## Error in is.data.frame(y): object 'plant_date_loc' not found
 ```
 Not every vegetable in the garden harvest data set has information on plot location. To get rid of any NA values, we could use an inner join function.
 
@@ -106,7 +118,8 @@ Not every vegetable in the garden harvest data set has information on plot locat
 
   4. Subset the data to tomatoes. Reorder the tomato varieties from smallest to largest first harvest date. Create a barplot of total harvest in pounds for each variety, in the new order.CHALLENGE: add the date near the end of the bar. (This is probably not a super useful graph because it's difficult to read. This is more an exercise in using some of the functions you just learned.)
 
-```{r}
+
+```r
 garden_harvest %>% 
   filter(vegetable == "tomatoes") %>%
   mutate(variety = fct_reorder(variety, date, min)) %>% 
@@ -121,9 +134,12 @@ garden_harvest %>%
        x = "total pounds")
 ```
 
+![](03_exercises_files/figure-html/unnamed-chunk-3-1.png)<!-- -->
+
   5. In the `garden_harvest` data, create two new variables: one that makes the varieties lowercase and another that finds the length of the variety name. Arrange the data by vegetable and length of variety name (smallest to largest), with one row for each vegetable variety. HINT: use `str_to_lower()`, `str_length()`, and `distinct()`.
   
-```{r}
+
+```r
 garden_harvest %>% 
   mutate(lowercase = str_to_lower(variety),
          length = str_length(variety)) %>%
@@ -132,14 +148,27 @@ garden_harvest %>%
   arrange(vegetable, length)
 ```
 
+<div data-pagedtable="false">
+  <script data-pagedtable-source type="application/json">
+{"columns":[{"label":["vegetable"],"name":[1],"type":["chr"],"align":["left"]},{"label":["variety"],"name":[2],"type":["chr"],"align":["left"]},{"label":["length"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"apple","2":"unknown","3":"7"},{"1":"asparagus","2":"asparagus","3":"9"},{"1":"basil","2":"Isle of Naxos","3":"13"},{"1":"beans","2":"Bush Bush Slender","3":"17"},{"1":"beans","2":"Chinese Red Noodle","3":"18"},{"1":"beans","2":"Classic Slenderette","3":"19"},{"1":"beets","2":"leaves","3":"6"},{"1":"beets","2":"Sweet Merlin","3":"12"},{"1":"beets","2":"Gourmet Golden","3":"14"},{"1":"broccoli","2":"Yod Fah","3":"7"},{"1":"broccoli","2":"Main Crop Bravado","3":"17"},{"1":"carrots","2":"Bolero","3":"6"},{"1":"carrots","2":"Dragon","3":"6"},{"1":"carrots","2":"greens","3":"6"},{"1":"carrots","2":"King Midas","3":"10"},{"1":"chives","2":"perrenial","3":"9"},{"1":"cilantro","2":"cilantro","3":"8"},{"1":"corn","2":"Dorinny Sweet","3":"13"},{"1":"corn","2":"Golden Bantam","3":"13"},{"1":"cucumbers","2":"pickling","3":"8"},{"1":"edamame","2":"edamame","3":"7"},{"1":"hot peppers","2":"thai","3":"4"},{"1":"hot peppers","2":"variety","3":"7"},{"1":"jalapeño","2":"giant","3":"5"},{"1":"kale","2":"Heirloom Lacinto","3":"16"},{"1":"kohlrabi","2":"Crispy Colors Duo","3":"17"},{"1":"lettuce","2":"reseed","3":"6"},{"1":"lettuce","2":"Tatsoi","3":"6"},{"1":"lettuce","2":"mustard greens","3":"14"},{"1":"lettuce","2":"Lettuce Mixture","3":"15"},{"1":"lettuce","2":"Farmer's Market Blend","3":"21"},{"1":"onions","2":"Delicious Duo","3":"13"},{"1":"onions","2":"Long Keeping Rainbow","3":"20"},{"1":"peas","2":"Magnolia Blossom","3":"16"},{"1":"peas","2":"Super Sugar Snap","3":"16"},{"1":"peppers","2":"green","3":"5"},{"1":"peppers","2":"variety","3":"7"},{"1":"potatoes","2":"red","3":"3"},{"1":"potatoes","2":"purple","3":"6"},{"1":"potatoes","2":"Russet","3":"6"},{"1":"potatoes","2":"yellow","3":"6"},{"1":"pumpkins","2":"saved","3":"5"},{"1":"pumpkins","2":"New England Sugar","3":"17"},{"1":"pumpkins","2":"Cinderella's Carraige","3":"21"},{"1":"radish","2":"Garden Party Mix","3":"16"},{"1":"raspberries","2":"perrenial","3":"9"},{"1":"rutabaga","2":"Improved Helenor","3":"16"},{"1":"spinach","2":"Catalina","3":"8"},{"1":"squash","2":"delicata","3":"8"},{"1":"squash","2":"Red Kuri","3":"8"},{"1":"squash","2":"Blue (saved)","3":"12"},{"1":"squash","2":"Waltham Butternut","3":"17"},{"1":"strawberries","2":"perrenial","3":"9"},{"1":"Swiss chard","2":"Neon Glow","3":"9"},{"1":"tomatoes","2":"grape","3":"5"},{"1":"tomatoes","2":"Big Beef","3":"8"},{"1":"tomatoes","2":"Jet Star","3":"8"},{"1":"tomatoes","2":"Better Boy","3":"10"},{"1":"tomatoes","2":"Black Krim","3":"10"},{"1":"tomatoes","2":"Bonny Best","3":"10"},{"1":"tomatoes","2":"Brandywine","3":"10"},{"1":"tomatoes","2":"Old German","3":"10"},{"1":"tomatoes","2":"volunteers","3":"10"},{"1":"tomatoes","2":"Amish Paste","3":"11"},{"1":"tomatoes","2":"Cherokee Purple","3":"15"},{"1":"tomatoes","2":"Mortgage Lifter","3":"15"},{"1":"zucchini","2":"Romanesco","3":"9"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+
   6. In the `garden_harvest` data, find all distinct vegetable varieties that have "er" or "ar" in their name. HINT: `str_detect()` with an "or" statement (use the | for "or") and `distinct()`.
 
-```{r}
+
+```r
 garden_harvest %>% 
   mutate(has_er_ar = str_detect(variety, "er|ar")) %>%
   filter(has_er_ar == TRUE) %>% 
   distinct(vegetable, variety)
 ```
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source type="application/json">
+{"columns":[{"label":["vegetable"],"name":[1],"type":["chr"],"align":["left"]},{"label":["variety"],"name":[2],"type":["chr"],"align":["left"]}],"data":[{"1":"radish","2":"Garden Party Mix"},{"1":"lettuce","2":"Farmer's Market Blend"},{"1":"peas","2":"Super Sugar Snap"},{"1":"chives","2":"perrenial"},{"1":"strawberries","2":"perrenial"},{"1":"asparagus","2":"asparagus"},{"1":"lettuce","2":"mustard greens"},{"1":"raspberries","2":"perrenial"},{"1":"beans","2":"Bush Bush Slender"},{"1":"beets","2":"Sweet Merlin"},{"1":"hot peppers","2":"variety"},{"1":"tomatoes","2":"Cherokee Purple"},{"1":"tomatoes","2":"Better Boy"},{"1":"peppers","2":"variety"},{"1":"tomatoes","2":"Mortgage Lifter"},{"1":"tomatoes","2":"Old German"},{"1":"tomatoes","2":"Jet Star"},{"1":"carrots","2":"Bolero"},{"1":"tomatoes","2":"volunteers"},{"1":"beans","2":"Classic Slenderette"},{"1":"pumpkins","2":"Cinderella's Carraige"},{"1":"squash","2":"Waltham Butternut"},{"1":"pumpkins","2":"New England Sugar"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 
 
 ## Bicycle-Use Patterns
@@ -162,7 +191,8 @@ Two data tables are available:
 
 Here is the code to read in the data. We do this a little differently than usual, which is why it is included here rather than at the top of this file. To avoid repeatedly re-reading the files, start the data import chunk with `{r cache = TRUE}` rather than the usual `{r}`.
 
-```{r cache=TRUE}
+
+```r
 data_site <- 
   "https://www.macalester.edu/~dshuman1/data/112/2014-Q4-Trips-History-Data.rds" 
 Trips <- readRDS(gzcon(url(data_site)))
@@ -177,7 +207,8 @@ It's natural to expect that bikes are rented more at some times of day, some day
 
   7. A density plot, which is a smoothed out histogram, of the events versus `sdate`. Use `geom_density()`.
   
-```{r}
+
+```r
 Trips %>% 
   ggplot(aes(x = sdate))+
   geom_density()+
@@ -185,11 +216,14 @@ Trips %>%
        x = "",
        y = "")
 ```
+
+![](03_exercises_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
   This density plot illustrates the distribution of bike rentals as time progresses. A majority of bike rentals occur in October and November, as weather is more permitting for a bike ride in these months. Likewise, in December and January when there is snow and cold weather, bike rentals are generally down.
   
   8. A density plot of the events versus time of day.  You can use `mutate()` with `lubridate`'s  `hour()` and `minute()` functions to extract the hour of the day and minute within the hour from `sdate`. Hint: A minute is 1/60 of an hour, so create a variable where 3:30 is 3.5 and 3:45 is 3.75.
   
-```{r}
+
+```r
 Trips %>% 
   mutate(hour = hour(sdate),
          minute = minute(sdate),
@@ -200,11 +234,14 @@ Trips %>%
        x = "hour of the day",
        y = "")
 ```
+
+![](03_exercises_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
   This density plot illustrates the distribution of bike rentals by time of day. This density curve is bimodal, where there is a spike in bike rentals around 8:30 AM, the approximate commute to work time, and around 5:30 PM, the approximate commute home time.
   
   9. A bar graph of the events versus day of the week. Put day on the y-axis.
   
-```{r}
+
+```r
 Trips %>% 
   mutate(wday = wday(sdate, label = TRUE)) %>% 
   ggplot(aes(y = fct_rev(wday)))+
@@ -213,11 +250,14 @@ Trips %>%
        x = "",
        y = "")
 ```
+
+![](03_exercises_files/figure-html/unnamed-chunk-9-1.png)<!-- -->
   This barplot shows bike rentals by day of the week. Generally, weekdays have more rentals than weekends, but weekdays and weekends themselves look similar. Bike rentals are most popular on Fridays.
   
   10. Facet your graph from exercise 8. by day of the week. Is there a pattern?
   
-```{r}
+
+```r
 Trips %>% 
   mutate(hour = hour(sdate),
          minute = minute(sdate),
@@ -230,13 +270,16 @@ Trips %>%
        x = "",
        y = "")
 ```
+
+![](03_exercises_files/figure-html/unnamed-chunk-10-1.png)<!-- -->
   There is a pattern in the distribution of bike rentals by time of day. When looking at weekdays, the density curves are bimodal, where there is a spike in bike rentals around 8:30 AM, the approximate commute to work time, and around 5:30 PM, the approximate commute home time. The weekends have a pattern as well, but have one spike around midday, rather than two spikes like a week day does.
   
 The variable `client` describes whether the renter is a regular user (level `Registered`) or has not joined the bike-rental organization (`Causal`). The next set of exercises investigate whether these two different categories of users show different rental behavior and how `client` interacts with the patterns you found in the previous exercises. 
 
   11. Change the graph from exercise 10 to set the `fill` aesthetic for `geom_density()` to the `client` variable. You should also set `alpha = .5` for transparency and `color=NA` to suppress the outline of the density function.
   
-```{r}
+
+```r
 Trips %>% 
   mutate(hour = hour(sdate),
          minute = minute(sdate),
@@ -251,9 +294,12 @@ Trips %>%
        y = "")
 ```
 
+![](03_exercises_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
+
   12. Change the previous graph by adding the argument `position = position_stack()` to `geom_density()`. In your opinion, is this better or worse in terms of telling a story? What are the advantages/disadvantages of each?
   
-```{r}
+
+```r
 Trips %>% 
   mutate(hour = hour(sdate),
          minute = minute(sdate),
@@ -267,11 +313,14 @@ Trips %>%
        x = "",
        y = "")
 ```
+
+![](03_exercises_files/figure-html/unnamed-chunk-12-1.png)<!-- -->
   In my opinion, this is much better in terms of telling a story. There is much more of a descrepcency between the types of clients and the last graph was simply a mess. The lack of overlap or blending gives us the opportunity to make stronger, definitive conclusions.
   
   13. In this graph, go back to using the regular density plot (without `position = position_stack()`). Add a new variable to the dataset called `weekend` which will be "weekend" if the day is Saturday or Sunday and  "weekday" otherwise (HINT: use the `ifelse()` function and the `wday()` function from `lubridate`). Then, update the graph from the previous problem by faceting on the new `weekend` variable. 
   
-```{r}
+
+```r
 Trips %>% 
   mutate(hour = hour(sdate),
          minute = minute(sdate),
@@ -286,10 +335,13 @@ Trips %>%
        x = "",
        y = "")
 ```
+
+![](03_exercises_files/figure-html/unnamed-chunk-13-1.png)<!-- -->
   
   14. Change the graph from the previous problem to facet on `client` and fill with `weekday`. What information does this graph tell you that the previous didn't? Is one graph better than the other?
   
-```{r}
+
+```r
 Trips %>% 
   mutate(hour = hour(sdate),
          minute = minute(sdate),
@@ -304,13 +356,16 @@ Trips %>%
        x = "",
        y = "")
 ```
+
+![](03_exercises_files/figure-html/unnamed-chunk-14-1.png)<!-- -->
   This graph facets on client and fills with weekday instead of faceting on weekday and filling with client type. The shape of these graphs are very similar, but the distribution underneath the density plot now tells a story about the difference in the type of day, and we can compare side by side distributions of the type of client.
   
 ### Spatial patterns
 
   15. Use the latitude and longitude variables in `Stations` to make a visualization of the total number of departures from each station in the `Trips` data. Use either color or size to show the variation in number of departures. We will improve this plot next week when we learn about maps!
   
-```{r}
+
+```r
 Trips %>% 
   count(sstation) %>% 
   inner_join(Stations,
@@ -322,10 +377,13 @@ Trips %>%
        x = "longitude",
        y = "latitude")
 ```
+
+![](03_exercises_files/figure-html/unnamed-chunk-15-1.png)<!-- -->
   
   16. Only 14.4% of the trips in our data are carried out by casual users. Create a plot that shows which area(s) have stations with a much higher percentage of departures by casual users. What patterns do you notice? (Again, we'll improve this next week when we learn about maps).
   
-```{r}
+
+```r
 Trips %>% 
   group_by(sstation) %>% 
   summarize(tot_dept = n(), 
@@ -339,6 +397,8 @@ Trips %>%
        x = "longitude",
        y = "latitude")
 ```
+
+![](03_exercises_files/figure-html/unnamed-chunk-16-1.png)<!-- -->
   I notice that there is a cluster of points around -77.1 to -77.0 longitude and then a little cluster up around 39.1 latitude. Further, most of these points have a proportion less than 0.4 due to the dark shade of blue.
 
 
@@ -350,21 +410,15 @@ In this section, we'll use the data from 2022-02-01 Tidy Tuesday. If you didn't 
 
   17. The final product of this exercise will be a graph that has breed on the y-axis and the sum of the numeric ratings in the `breed_traits` dataset on the x-axis, with a dot for each rating. First, create a new dataset called `breed_traits_total` that has two variables -- `Breed` and `total_rating`. The `total_rating` variable is the sum of the numeric ratings in the `breed_traits` dataset (we'll use this dataset again in the next problem). Then, create the graph just described. Omit Breeds with a `total_rating` of 0 and order the Breeds from highest to lowest ranked. You may want to adjust the `fig.height` and `fig.width` arguments inside the code chunk options (eg. `{r, fig.height=8, fig.width=4}`) so you can see things more clearly - check this after you knit the file to assure it looks like what you expected.
 
-```{r}
 
-```
 
   18. The final product of this exercise will be a graph with the top-20 dogs in total ratings (from previous problem) on the y-axis, year on the x-axis, and points colored by each breed's ranking for that year (from the `breed_rank_all` dataset). The points within each breed will be connected by a line, and the breeds should be arranged from the highest median rank to lowest median rank ("highest" is actually the smallest numer, eg. 1 = best). After you're finished, think of AT LEAST one thing you could you do to make this graph better. HINTS: 1. Start with the `breed_rank_all` dataset and pivot it so year is a variable. 2. Use the `separate()` function to get year alone, and there's an extra argument in that function that can make it numeric. 3. For both datasets used, you'll need to `str_squish()` Breed before joining. 
   
-```{r}
 
-```
   
   19. Create your own! Requirements: use a `join` or `pivot` function (or both, if you'd like), a `str_XXX()` function, and a `fct_XXX()` function to create a graph using any of the dog datasets. One suggestion is to try to improve the graph you created for the Tidy Tuesday assignment. If you want an extra challenge, find a way to use the dog images in the `breed_rank_all` file - check out the `ggimage` library and [this resource](https://wilkelab.org/ggtext/) for putting images as labels.
   
-```{r}
 
-```
   
 ## GitHub link
 
